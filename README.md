@@ -45,7 +45,9 @@ Akun awal setelah seed:
 5. Isi Environment Variables:
    - `DATABASE_URL` = connection string PostgreSQL production
    - `AUTH_SECRET` = secret acak, contoh generate dengan `openssl rand -base64 32`
+   - `NEXTAUTH_SECRET` = isi sama dengan `AUTH_SECRET` jika diperlukan kompatibilitas Auth.js
    - `AUTH_URL` = `https://digitalmarketingbrother-web.vercel.app`
+   - `NEXTAUTH_URL` = isi sama dengan `AUTH_URL` jika diperlukan kompatibilitas Auth.js
 6. Build Command: `npm run build`
 7. Install Command: `npm install`
 
