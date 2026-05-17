@@ -4,6 +4,10 @@ import { auth } from "@/auth";
 const protectedRoutes = ["/dashboard", "/content", "/campaigns", "/leads", "/team", "/reports"];
 
 export default auth((request) => {
+  if (request.nextUrl.pathname === "/LOGIN") {
+    return NextResponse.redirect(new URL("/login", request.nextUrl.origin));
+  }
+
   const isProtectedRoute = protectedRoutes.some((route) => request.nextUrl.pathname.startsWith(route));
 
   if (!request.auth && isProtectedRoute) {
