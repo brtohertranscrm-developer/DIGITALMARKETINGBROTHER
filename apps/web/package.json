@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "vercel-build": "cd ../.. && npm run db:deploy && npm run db:seed && npm run build --workspace @brothers-trans/web"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
