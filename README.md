@@ -48,14 +48,14 @@ Akun awal setelah seed:
    - `NEXTAUTH_SECRET` = isi sama dengan `AUTH_SECRET` jika diperlukan kompatibilitas Auth.js
    - `AUTH_URL` = `https://digitalmarketingbrother-web.vercel.app`
    - `NEXTAUTH_URL` = isi sama dengan `AUTH_URL` jika diperlukan kompatibilitas Auth.js
-6. Build Command: `npm run build`
+6. Build Command: `npm run vercel-build`
 7. Install Command: `npm install`
 
-Setelah database production siap, jalankan migration dan seed dari lokal dengan `DATABASE_URL` production atau lewat Vercel CLI/CI:
+Vercel build akan otomatis menjalankan migration dan seed lewat `npm run vercel-build`. Jika ingin menjalankan manual dari lokal:
 
 ```bash
-npm run db:deploy
-npm run db:seed
+DATABASE_URL="PASTE_DATABASE_URL_NEON" npm run db:deploy
+DATABASE_URL="PASTE_DATABASE_URL_NEON" npm run db:seed
 ```
 
 Catatan penting:
