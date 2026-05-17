@@ -1,4 +1,5 @@
 import { loginAction } from "./actions";
+import { LoginButton } from "./login-button";
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const params = await searchParams;
@@ -27,7 +28,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             <label htmlFor="password" className="text-sm font-medium text-slate-700">Password</label>
             <input id="password" name="password" type="password" required autoComplete="current-password" className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-slate-950 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-blue-100" placeholder="Minimal 8 karakter" />
           </div>
-          <button type="submit" className="w-full rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-500">Masuk</button>
+          <LoginButton />
         </form>
 
         <div className="mt-6 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">

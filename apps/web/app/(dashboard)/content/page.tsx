@@ -3,6 +3,7 @@ import { id } from "date-fns/locale";
 import { db } from "@brothers-trans/database";
 import { ContentForm } from "./content-form";
 import { StatusForm } from "./status-form";
+import { MetricForm } from "./metric-form";
 
 function formatDate(date: Date | null) {
   if (!date) {
@@ -20,6 +21,7 @@ export default async function ContentPage() {
         campaign: true,
         socialAccount: true,
         assignee: true,
+        metrics: { orderBy: { measuredAt: "desc" }, take: 1 },
       },
       take: 50,
     }),
@@ -45,7 +47,8 @@ export default async function ContentPage() {
         ) : (
           <div className="divide-y divide-slate-100">
             {contentItems.map((item) => (
-              <div key={item.id} className="grid gap-4 p-5 xl:grid-cols-[1.4fr_0.9fr_1fr] xl:items-center">
+              <div key={item.id} className="space-y-4 p-5">
+                <div className="grid gap-4 xl:grid-cols-[1.4fr_0.9fr_1fr] xl:items-center">
                 <div>
                   <p className="font-medium text-slate-950">{item.title}</p>
                   <p className="mt-1 text-sm text-slate-500">{item.contentType} · {item.socialAccount?.platform ?? "No platform"} · {item.campaign?.name ?? "No campaign"}</p>
@@ -57,6 +60,16 @@ export default async function ContentPage() {
                   <p className="mt-1 text-xs text-slate-500">PIC: {item.assignee?.name ?? "Belum ada"}</p>
                 </div>
                 <StatusForm contentItemId={item.id} currentStatus={item.status} />
+                </div>
+                {item.metrics[0] ? (
+                  <div className="grid gap-2 rounded-xl bg-slate-50 p-3 text-xs text-slate-600 md:grid-cols-4">
+                    <span>Reach: {item.metrics[0].reach}</span>
+                    <span>Views: {item.metrics[0].views}</span>
+                    <span>Likes: {item.metrics[0].likes}</span>
+                    <span>Clicks: {item.metrics[0].clicks}</span>
+                  </div>
+                ) : null}
+                <MetricForm contentItemId={item.id} />
               </div>
             ))}
           </div>

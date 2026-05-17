@@ -87,3 +87,44 @@ export async function deleteContentItem(contentItemId: string) {
   revalidatePath("/content");
   revalidatePath("/dashboard");
 }
+
+
+const contentMetricSchema = z.object({
+  reach: z.coerce.number().min(0).default(0),
+  impressions: z.coerce.number().min(0).default(0),
+  views: z.coerce.number().min(0).default(0),
+  likes: z.coerce.number().min(0).default(0),
+  comments: z.coerce.number().min(0).default(0),
+  shares: z.coerce.number().min(0).default(0),
+  saves: z.coerce.number().min(0).default(0),
+  clicks: z.coerce.number().min(0).default(0),
+});
+
+export async function createContentMetric(contentItemId: string, formData: FormData) {
+  const user = await getSessionUser();
+
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  const parsed = contentMetricSchema.parse({
+    reach: formData.get("reach") || 0,
+    impressions: formData.get("impressions") || 0,
+    views: formData.get("views") || 0,
+    likes: formData.get("likes") || 0,
+    comments: formData.get("comments") || 0,
+    shares: formData.get("shares") || 0,
+    saves: formData.get("saves") || 0,
+    clicks: formData.get("clicks") || 0,
+  });
+
+  await db.contentMetric.create({
+    data: {
+      contentItemId,
+      ...parsed,
+    },
+  });
+
+  revalidatePath("/content");
+  revalidatePath("/dashboard");
+}

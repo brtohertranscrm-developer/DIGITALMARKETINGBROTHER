@@ -12,6 +12,8 @@ function formatCurrency(value: unknown) {
   }).format(Number(value ?? 0));
 }
 
+const pipelineStatuses = ["NEW", "CONTACTED", "QUOTED", "BOOKED", "LOST"];
+
 export default async function LeadsPage() {
   const [leads, campaigns] = await Promise.all([
     db.lead.findMany({
@@ -22,6 +24,11 @@ export default async function LeadsPage() {
     db.campaign.findMany({ orderBy: { startDate: "desc" }, select: { id: true, name: true } }),
   ]);
 
+  const leadsByStatus = pipelineStatuses.map((status) => ({
+    status,
+    leads: leads.filter((lead) => lead.status === status),
+  }));
+
   return (
     <div className="space-y-6">
       <div>
@@ -31,6 +38,36 @@ export default async function LeadsPage() {
       </div>
 
       <LeadForm campaigns={campaigns} />
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="mb-5">
+          <h3 className="text-lg font-semibold text-slate-950">Pipeline Leads</h3>
+          <p className="text-sm text-slate-500">Pantau progres follow-up dari lead baru sampai booking.</p>
+        </div>
+        <div className="grid gap-4 xl:grid-cols-5">
+          {leadsByStatus.map((column) => (
+            <div key={column.status} className="rounded-2xl bg-slate-50 p-4">
+              <div className="mb-4 flex items-center justify-between">
+                <h4 className="text-sm font-semibold text-slate-700">{column.status}</h4>
+                <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-slate-600">{column.leads.length}</span>
+              </div>
+              <div className="space-y-3">
+                {column.leads.length === 0 ? (
+                  <p className="rounded-xl border border-dashed border-slate-200 bg-white p-4 text-center text-xs text-slate-400">Kosong</p>
+                ) : (
+                  column.leads.slice(0, 6).map((lead) => (
+                    <div key={lead.id} className="rounded-xl border border-slate-100 bg-white p-3 shadow-sm">
+                      <p className="text-sm font-semibold text-slate-950">{lead.name ?? "Tanpa nama"}</p>
+                      <p className="mt-1 text-xs text-slate-500">{lead.phone}</p>
+                      <p className="mt-2 text-xs font-medium text-brand-600">{formatCurrency(lead.value)}</p>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-left text-sm">
