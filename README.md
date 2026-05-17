@@ -43,9 +43,9 @@ Akun awal setelah seed:
 3. Set Root Directory ke root repo.
 4. Tambahkan PostgreSQL production, misalnya Neon, Supabase, atau Vercel Postgres.
 5. Isi Environment Variables:
-   - `DATABASE_URL`
-   - `AUTH_SECRET`
-   - `AUTH_URL`
+   - `DATABASE_URL` = connection string PostgreSQL production
+   - `AUTH_SECRET` = secret acak, contoh generate dengan `openssl rand -base64 32`
+   - `AUTH_URL` = `https://digitalmarketingbrother-web.vercel.app`
 6. Build Command: `npm run build`
 7. Install Command: `npm install`
 
