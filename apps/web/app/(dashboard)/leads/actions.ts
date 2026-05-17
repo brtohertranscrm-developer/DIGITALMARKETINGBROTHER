@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { auth } from "@/auth";
+import { getSessionUser } from "@/lib/session";
 import { db } from "@brothers-trans/database";
 
 const leadSchema = z.object({
@@ -16,9 +16,9 @@ const leadSchema = z.object({
 });
 
 export async function createLead(formData: FormData) {
-  const session = await auth();
+  const user = await getSessionUser();
 
-  if (!session?.user?.id) {
+  if (!user) {
     throw new Error("Unauthorized");
   }
 
@@ -50,9 +50,9 @@ export async function createLead(formData: FormData) {
 }
 
 export async function updateLeadStatus(leadId: string, status: string) {
-  const session = await auth();
+  const user = await getSessionUser();
 
-  if (!session?.user?.id) {
+  if (!user) {
     throw new Error("Unauthorized");
   }
 

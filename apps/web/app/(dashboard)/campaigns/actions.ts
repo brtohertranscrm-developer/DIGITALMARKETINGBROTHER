@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { auth } from "@/auth";
+import { getSessionUser } from "@/lib/session";
 import { db } from "@brothers-trans/database";
 
 const campaignSchema = z.object({
@@ -14,9 +14,9 @@ const campaignSchema = z.object({
 });
 
 export async function createCampaign(formData: FormData) {
-  const session = await auth();
+  const user = await getSessionUser();
 
-  if (!session?.user?.id) {
+  if (!user) {
     throw new Error("Unauthorized");
   }
 
@@ -43,9 +43,9 @@ export async function createCampaign(formData: FormData) {
 }
 
 export async function deleteCampaign(campaignId: string) {
-  const session = await auth();
+  const user = await getSessionUser();
 
-  if (!session?.user?.id) {
+  if (!user) {
     throw new Error("Unauthorized");
   }
 

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { auth } from "@/auth";
+import { getSessionUser } from "@/lib/session";
 import { db } from "@brothers-trans/database";
 
 const contentItemSchema = z.object({
@@ -16,9 +16,9 @@ const contentItemSchema = z.object({
 });
 
 export async function createContentItem(formData: FormData) {
-  const session = await auth();
+  const user = await getSessionUser();
 
-  if (!session?.user?.id) {
+  if (!user) {
     throw new Error("Unauthorized");
   }
 
@@ -45,8 +45,8 @@ export async function createContentItem(formData: FormData) {
       scheduledAt: parsed.scheduledAt ? new Date(parsed.scheduledAt) : null,
       campaignId: parsed.campaignId || null,
       socialAccountId: socialAccount?.id ?? null,
-      creatorId: session.user.id,
-      assigneeId: session.user.id,
+      creatorId: user.id,
+      assigneeId: user.id,
     },
   });
 
@@ -55,9 +55,9 @@ export async function createContentItem(formData: FormData) {
 }
 
 export async function updateContentStatus(contentItemId: string, status: string) {
-  const session = await auth();
+  const user = await getSessionUser();
 
-  if (!session?.user?.id) {
+  if (!user) {
     throw new Error("Unauthorized");
   }
 
@@ -76,9 +76,9 @@ export async function updateContentStatus(contentItemId: string, status: string)
 }
 
 export async function deleteContentItem(contentItemId: string) {
-  const session = await auth();
+  const user = await getSessionUser();
 
-  if (!session?.user?.id) {
+  if (!user) {
     throw new Error("Unauthorized");
   }
 

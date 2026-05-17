@@ -1,21 +1,30 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { AuthError } from "next-auth";
-import { signIn } from "@/auth";
+import { compare } from "bcryptjs";
+import { db } from "@brothers-trans/database";
+import { createSession } from "@/lib/session";
 
 export async function loginAction(formData: FormData) {
-  try {
-    await signIn("credentials", {
-      email: formData.get("email"),
-      password: formData.get("password"),
-      redirectTo: "/dashboard",
-    });
-  } catch (error) {
-    if (error instanceof AuthError) {
-      redirect("/login?error=credentials");
-    }
+  const email = String(formData.get("email") ?? "").toLowerCase();
+  const password = String(formData.get("password") ?? "");
 
-    throw error;
+  if (!email || !password) {
+    redirect("/login?error=credentials");
   }
+
+  const user = await db.user.findUnique({ where: { email } });
+
+  if (!user?.passwordHash) {
+    redirect("/login?error=credentials");
+  }
+
+  const isValidPassword = await compare(password, user.passwordHash);
+
+  if (!isValidPassword) {
+    redirect("/login?error=credentials");
+  }
+
+  await createSession(user.id);
+  redirect("/dashboard");
 }

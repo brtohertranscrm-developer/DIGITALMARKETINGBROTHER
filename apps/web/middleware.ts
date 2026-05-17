@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 
+const appSessionCookieName = "bt_session";
 const protectedRoutes = ["/dashboard", "/content", "/campaigns", "/leads", "/team", "/reports"];
-const sessionCookieNames = ["authjs.session-token", "__Secure-authjs.session-token"];
 
 export function middleware(request: NextRequest) {
   if (request.nextUrl.pathname === "/LOGIN") {
@@ -14,9 +14,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const hasSessionCookie = sessionCookieNames.some((cookieName) => request.cookies.has(cookieName));
-
-  if (!hasSessionCookie) {
+  if (!request.cookies.has(appSessionCookieName)) {
     const loginUrl = new URL("/login", request.nextUrl.origin);
     loginUrl.searchParams.set("callbackUrl", request.nextUrl.href);
     return NextResponse.redirect(loginUrl);
