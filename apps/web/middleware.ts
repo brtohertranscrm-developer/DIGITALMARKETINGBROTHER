@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 const appSessionCookieName = "bt_session";
-const protectedRoutes = ["/dashboard", "/content", "/campaigns", "/leads", "/team", "/reports"];
+const protectedRoutes = ["/dashboard", "/content", "/social-accounts", "/campaigns", "/leads", "/team", "/reports"];
 
 export function middleware(request: NextRequest) {
   if (request.nextUrl.pathname === "/LOGIN") {

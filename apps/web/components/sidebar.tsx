@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { BarChart3, CalendarDays, FileText, Megaphone, MousePointerClick, Users } from "lucide-react";
+import { BarChart3, CalendarDays, FileText, Megaphone, MousePointerClick, Share2, Users } from "lucide-react";
 
 const navigation = [
   { href: "/dashboard", label: "Overview", icon: BarChart3 },
   { href: "/content", label: "Content Calendar", icon: CalendarDays },
+  { href: "/social-accounts", label: "Social Accounts", icon: Share2 },
   { href: "/campaigns", label: "Campaign", icon: Megaphone },
   { href: "/leads", label: "Leads", icon: MousePointerClick },
   { href: "/team", label: "Team KPI", icon: Users },
